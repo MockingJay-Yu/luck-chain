@@ -5,3 +5,5 @@
 - 经过一段时间，彩票将自动选出一名赢家（使用Chainlink VRF，Chainlink Automation完成）
 
 forge install smartcontractkit/chainlink-brownie-contracts@0.6.1 --no-commit
+forge install transmissions11/solmate --no-commit
+forge install Cyfrin/foundry-devops --no-commit

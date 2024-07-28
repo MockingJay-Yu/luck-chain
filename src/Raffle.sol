@@ -14,7 +14,7 @@ contract Raffle is VRFConsumerBaseV2 {
     error Raffle_NotEnoughETHSent();
     error Raffle_TansferFail();
     error Raffle_RaffleNotOpen();
-    error Raffle_UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 RaffleState);
+    error Raffle_UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
 
     enum RaffleState {
         OPEN,
