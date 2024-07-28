@@ -11,7 +11,7 @@ import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
 contract CreateSubscription is Script {
     function createSubscriptionUsingConfig() public returns (uint64) {
         HelperConfig helperConfig = new HelperConfig();
-        (,, address vrfCoordinator,,,,) = helperConfig.activeNetWorkConfig();
+        (,, address vrfCoordinator,,,,,) = helperConfig.activeNetWorkConfig();
         return createSubscription(vrfCoordinator);
     }
 
@@ -34,7 +34,7 @@ contract FundSubscription is Script {
 
     function fundSubscriptionUsingConfig() public {
         HelperConfig helperConfig = new HelperConfig();
-        (,, address vrfCoordinator,, uint64 subId,, address link) = helperConfig.activeNetWorkConfig();
+        (,, address vrfCoordinator,, uint64 subId,, address link,) = helperConfig.activeNetWorkConfig();
         fundSubscription(vrfCoordinator, subId, link);
     }
 
@@ -64,12 +64,12 @@ contract AddConsumer is Script {
 
     function addConsumerUsingConfig(address raffle) public {
         HelperConfig helperConfig = new HelperConfig();
-        (,, address vrfCoordinator,, uint64 subId,,) = helperConfig.activeNetWorkConfig();
-        addConsumer(raffle, vrfCoordinator, subId);
+        (,, address vrfCoordinator,, uint64 subId,,, uint256 deployerKey) = helperConfig.activeNetWorkConfig();
+        addConsumer(raffle, vrfCoordinator, subId, deployerKey);
     }
 
-    function addConsumer(address raffle, address vrfCoordinator, uint64 subId) public {
-        vm.startBroadcast();
+    function addConsumer(address raffle, address vrfCoordinator, uint64 subId, uint256 deployerKey) public {
+        vm.startBroadcast(deployerKey);
         VRFCoordinatorV2Mock(vrfCoordinator).addConsumer(subId, raffle);
         vm.stopBroadcast();
     }
