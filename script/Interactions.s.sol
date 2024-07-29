@@ -4,21 +4,20 @@ pragma solidity ^0.8.20;
 
 import {Script, console} from "forge-std/Script.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
-import {VRFCoordinatorV2Mock} from "@chainlink/contracts/v0.8/mocks/VRFCoordinatorV2Mock.sol";
+import {VRFCoordinatorV2_5Mock} from "@chainlink/contracts/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {LinkToken} from "../test/mocks/LinkToken.sol";
 import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
 
 contract CreateSubscription is Script {
     function createSubscriptionUsingConfig() public returns (uint64) {
         HelperConfig helperConfig = new HelperConfig();
-        (,, address vrfCoordinator,,,,,) = helperConfig.activeNetWorkConfig();
-        return createSubscription(vrfCoordinator);
+        (,, address vrfCoordinator,,,,, uint256 deployerKey) = helperConfig.activeNetWorkConfig();
+        return createSubscription(vrfCoordinator, deployerKey);
     }
 
-    function createSubscription(address vrfCoordinator) public returns (uint64) {
-        console.log("chainId:", block.chainid);
-        vm.startBroadcast();
-        uint64 subId = VRFCoordinatorV2Mock(vrfCoordinator).createSubscription();
+    function createSubscription(address vrfCoordinator, uint256 deployerKey) public returns (uint64) {
+        vm.startBroadcast(deployerKey);
+        uint64 subId = VRFCoordinatorV2_5Mock(vrfCoordinator).createSubscription();
         vm.stopBroadcast();
         console.log("subId:", subId);
         return subId;
@@ -34,18 +33,17 @@ contract FundSubscription is Script {
 
     function fundSubscriptionUsingConfig() public {
         HelperConfig helperConfig = new HelperConfig();
-        (,, address vrfCoordinator,, uint64 subId,, address link,) = helperConfig.activeNetWorkConfig();
-        fundSubscription(vrfCoordinator, subId, link);
+        (,, address vrfCoordinator,, uint64 subId,, address link, deployerKey) = helperConfig.activeNetWorkConfig();
+        fundSubscription(vrfCoordinator, subId, link, deployerKey);
     }
 
-    function fundSubscription(address vrfCoordinator, uint64 subId, address link) public {
-        console.log("on chain:", block.chainid);
+    function fundSubscription(address vrfCoordinator, uint64 subId, address link, uint256 deployerKey) public {
         if (block.chainid == 31337) {
-            vm.startBroadcast();
-            VRFCoordinatorV2Mock(vrfCoordinator).fundSubscription(subId, FUND_AMOUNT);
+            vm.startBroadcast(deployerKey);
+            VRFCoordinatorV2_5Mock(vrfCoordinator).fundSubscription(subId, FUND_AMOUNT);
             vm.stopBroadcast();
         } else {
-            vm.startBroadcast();
+            vm.startBroadcast(deployerKey);
             LinkToken(link).transferAndCall(vrfCoordinator, FUND_AMOUNT, abi.encode(subId));
             vm.stopBroadcast();
         }
@@ -70,7 +68,7 @@ contract AddConsumer is Script {
 
     function addConsumer(address raffle, address vrfCoordinator, uint64 subId, uint256 deployerKey) public {
         vm.startBroadcast(deployerKey);
-        VRFCoordinatorV2Mock(vrfCoordinator).addConsumer(subId, raffle);
+        VRFCoordinatorV2_5Mock(vrfCoordinator).addConsumer(subId, raffle);
         vm.stopBroadcast();
     }
 }

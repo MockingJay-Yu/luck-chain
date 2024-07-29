@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.20;
 
-import {Script} from "forge-std/Script.sol";
+import {Script, console} from "forge-std/Script.sol";
 import {Raffle} from "../src/Raffle.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {CreateSubscription, FundSubscription, AddConsumer} from "./Interactions.s.sol";
@@ -14,19 +15,19 @@ contract DeployRaffle is Script {
             uint256 interval,
             address vrfCoordinator,
             bytes32 gasLane,
-            uint64 subscriptionId,
+            uint256 subscriptionId,
             uint32 callbackGasLimit,
             address link,
             uint256 deployerKey
         ) = helperConfig.activeNetWorkConfig();
         if (subscriptionId == 0) {
             CreateSubscription interactions = new CreateSubscription();
-            subscriptionId = interactions.createSubscription(vrfCoordinator);
+            subscriptionId = interactions.createSubscription(vrfCoordinator, deployerKey);
 
             FundSubscription fundSubscription = new FundSubscription();
-            fundSubscription.fundSubscription(vrfCoordinator, subscriptionId, link);
+            fundSubscription.fundSubscription(vrfCoordinator, subscriptionId, link, deployerKey);
         }
-        vm.startBroadcast();
+        vm.startBroadcast(deployerKey);
         Raffle raffle = new Raffle(entranceFee, interval, vrfCoordinator, gasLane, subscriptionId, callbackGasLimit);
         vm.stopBroadcast();
         AddConsumer addConsumer = new AddConsumer();
