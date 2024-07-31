@@ -1,9 +1,42 @@
-# 一个去中心化的智能合约彩票系统
+# lacky-chain
 
-- 用户可以通过购买一张彩票参与
-- 彩票的费用将在抽奖的时全部给赢家
-- 经过一段时间，彩票将自动选出一名赢家（使用Chainlink VRF，Chainlink Automation完成）
+# Getting Started
 
-- forge install smartcontractkit/chainlink-brownie-contracts --no-commit
-- forge install transmissions11/solmate --no-commit
-- forge install Cyfrin/foundry-devops --no-commit
+## Quickstart
+
+```
+git clone https://github.com/Cyfrin/foundry-smart-contract-lottery-cu
+cd foundry-smart-contract-lottery-cu
+forge build
+```
+
+## Library
+
+```
+forge install smartcontractkit/chainlink-brownie-contracts --no-commit
+forge install transmissions11/solmate --no-commit
+forge install Cyfrin/foundry-devops --no-commit
+```
+
+## Deploy
+
+```
+make deploy
+```
+
+## Testing
+```
+forge test
+```
+
+or
+
+```
+forge test --fork-url $SEPOLIA_RPC_URL
+```
+
+### Test Coverage
+
+```
+forge coverage
+```
