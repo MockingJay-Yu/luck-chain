@@ -2,15 +2,16 @@
 pragma solidity ^0.8.20;
 
 import {
-    VRFConsumerBaseV2Plus, IVRFCoordinatorV2Plus
-} from "@chainlink/contracts/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
-import {VRFV2PlusClient} from "@chainlink/contracts/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
+    VRFConsumerBaseV2Plus,
+    IVRFCoordinatorV2Plus
+} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
+import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
 
 /**
  * @title A Raffle Contract
  * @author MockingJay-Yu
  * @notice This contract is for creating a raffle
- * @dev Implements Chainlink VRFv2
+ * @dev Implements Chainlink VRFv2_5
  */
 contract Raffle is VRFConsumerBaseV2Plus {
     error Raffle_NotEnoughETHSent();
@@ -19,8 +20,9 @@ contract Raffle is VRFConsumerBaseV2Plus {
     error Raffle_UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
 
     enum RaffleState {
-        OPEN,
-        CALCULATING
+        OPEN, //0
+        CALCULATING //1
+
     }
 
     uint16 private constant REQUEST_CONFIRMATIONS = 3;

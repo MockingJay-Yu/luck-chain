@@ -5,8 +5,11 @@ libs = ["lib"]
 
 
 remappings = [
-  '@chainlink/contracts/=lib/chainlink/contracts/src/',
+  '@chainlink/contracts/=lib/chainlink-brownie-contracts/contracts/',
   '@solmate=lib/solmate/src/'
 ]
+
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC_URL}"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
